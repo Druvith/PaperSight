@@ -15,6 +15,7 @@ import re
 import time
 import urllib.error
 import urllib.request
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
@@ -23,34 +24,43 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from .database import init_db, insert_patient, list_patients, delete_patient
+from .schema import PATIENT_FIELDS
 from .triage_engine import TriageEngine
 
-# Directories
-UPLOADS_DIR = Path("uploads")
+# Directories resolved relative to this module (not CWD)
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+UPLOADS_DIR = ROOT_DIR / "uploads"
 UPLOADS_DIR.mkdir(exist_ok=True)
-STATIC_DIR = Path("static")
+STATIC_DIR = ROOT_DIR / "static"
 STATIC_DIR.mkdir(exist_ok=True)
 
-app = FastAPI(title="GemmaSight")
-app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+# Image upload guard (prevent OOM on 8GB RAM target hardware)
+MAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10 MB
 
-# Database (single connection for demo; use pool in production)
-db = init_db()
+# Database singleton — initialized on startup so tests can patch it.
+db = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global db
+    db_path = os.environ.get("GEMMASIGHT_DB")
+    db = init_db(db_path)
+    yield
+    db.close()
+
+
+app = FastAPI(title="GemmaSight", lifespan=lifespan)
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
 OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "gemma4:e2b")
 TIMEOUT = int(os.environ.get("OLLAMA_TIMEOUT", "300"))
 
-PROMPT = """You are a medical intake assistant at a rural hospital.
+_FIELD_LIST = "\n".join(f"- {f['key']}" for f in PATIENT_FIELDS)
+PROMPT = f"""You are a medical intake assistant at a rural hospital.
 Extract the following from this photographed form and return ONLY valid JSON:
-- patient_name
-- age
-- gender
-- chief_complaint
-- duration
-- allergies
-- medications
-- referred_by
+{_FIELD_LIST}
 
 Copy the full text for each field exactly as written. Do not abbreviate or shorten.
 If a field is completely unreadable due to scribbles or heavy blur, mark it "unreadable".
@@ -114,11 +124,17 @@ def index() -> FileResponse:
 
 @app.post("/api/extract")
 def api_extract(photo: UploadFile = File(...)) -> JSONResponse:
-    # 1. Save uploaded photo
+    # 1. Read and validate uploaded photo
+    image_bytes = photo.file.read()
+    if len(image_bytes) > MAX_IMAGE_SIZE:
+        return JSONResponse(
+            {"error": "File too large", "detail": f"Maximum image size is {MAX_IMAGE_SIZE // (1024 * 1024)} MB."},
+            status_code=413,
+        )
+
     timestamp = time.strftime("%Y%m%d-%H%M%S")
     safe_name = re.sub(r"[^a-zA-Z0-9_.-]", "_", photo.filename or "photo")
     upload_path = UPLOADS_DIR / f"{timestamp}_{safe_name}"
-    image_bytes = photo.file.read()
     upload_path.write_bytes(image_bytes)
 
     # 2. Extract from photo via Ollama

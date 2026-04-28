@@ -8,8 +8,6 @@ dependencies = [
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.32.0",
     "python-multipart>=0.0.17",
-    "pytest>=9.0.3",
-    "httpx>=0.28.1",
 ]
 
 [project.scripts]
@@ -26,7 +24,7 @@ build-backend = "hatchling.build"
 package = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/validation_hackathon", "src/gemmasight"]
+packages = ["src/gemmasight"]
 
 [dependency-groups]
 dev = [

@@ -21,6 +21,7 @@ os.environ["GEMMASIGHT_DB"] = ":memory:"
 
 from gemmasight.main import app
 from gemmasight.database import init_db
+from gemmasight.schema import PATIENT_KEYS
 
 client = TestClient(app)
 
@@ -31,7 +32,8 @@ main_module.db = init_db(":memory:")
 
 def _mock_ollama_response(chief_complaint: str = "Fever and chills"):
     """Return what _call_ollama would return after parsing: (extracted_dict, error_string)."""
-    extracted = {
+    extracted = {k: "" for k in PATIENT_KEYS}
+    extracted.update({
         "patient_name": "Maya Raman",
         "age": "43",
         "gender": "Female",
@@ -40,7 +42,7 @@ def _mock_ollama_response(chief_complaint: str = "Fever and chills"):
         "allergies": "Penicillin",
         "medications": "Metformin",
         "referred_by": "ASHA worker",
-    }
+    })
     return extracted
 
 

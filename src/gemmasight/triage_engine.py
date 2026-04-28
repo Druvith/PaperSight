@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -13,13 +14,31 @@ class TriageEngine:
 
     def __init__(self, rules_path: Path | None = None) -> None:
         if rules_path is None:
-            rules_path = Path(__file__).parent.parent.parent / "triage_rules.json"
-            if not rules_path.exists():
-                rules_path = Path.cwd() / "triage_rules.json"
+            rules_path = self._resolve_rules_path()
         self.rules_path = rules_path
         self.raw = json.loads(rules_path.read_text(encoding="utf-8"))
         self.rules = self.raw["rules"]
         self.escalation = self.raw.get("escalation", {})
+
+    @staticmethod
+    def _resolve_rules_path() -> Path:
+        """Locate triage_rules.json via env var, package root, or CWD fallback."""
+        env_path = os.environ.get("TRIAGE_RULES_PATH")
+        if env_path:
+            path = Path(env_path)
+            if path.exists():
+                return path
+        # Project root when running from source
+        path = Path(__file__).resolve().parent.parent.parent / "triage_rules.json"
+        if path.exists():
+            return path
+        # CWD fallback
+        path = Path.cwd() / "triage_rules.json"
+        if path.exists():
+            return path
+        raise FileNotFoundError(
+            "triage_rules.json not found. Set TRIAGE_RULES_PATH or run from project root."
+        )
 
     def _matches(self, text: str, keywords: list[str]) -> bool:
         text_lower = text.strip().lower().replace("-", " ")

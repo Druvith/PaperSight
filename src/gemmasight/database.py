@@ -3,23 +3,25 @@
 from __future__ import annotations
 
 import sqlite3
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from .schema import PATIENT_KEYS
+
 DB_PATH = Path("gemmasight.db")
 
-CREATE_SQL = """
+# Patient columns come from schema; triage columns are appended.
+_PATIENT_COLS = ", ".join(PATIENT_KEYS)
+_TRIAGE_COLS = (
+    "priority, priority_label, wait_time, action, "
+    "matched_rules, matched_descriptions, escalated, escalation_reason"
+)
+_ALL_COLS = f"{_PATIENT_COLS}, {_TRIAGE_COLS}"
+
+CREATE_SQL = f"""
 CREATE TABLE IF NOT EXISTS patients (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    patient_name TEXT,
-    age TEXT,
-    gender TEXT,
-    chief_complaint TEXT,
-    duration TEXT,
-    allergies TEXT,
-    medications TEXT,
-    referred_by TEXT,
+    {_PATIENT_COLS.replace(", ", " TEXT,\n    ")} TEXT,
     priority TEXT,
     priority_label TEXT,
     wait_time TEXT,
@@ -46,41 +48,34 @@ def init_db(db_path: str | Path | None = None) -> sqlite3.Connection:
 
 
 def insert_patient(conn: sqlite3.Connection, extracted: dict[str, Any], triage: dict[str, Any]) -> int:
-    cursor = conn.execute(
-        """
+    placeholders = ", ".join(["?"] * (len(PATIENT_KEYS) + 8))
+    sql = f"""
         INSERT INTO patients (
-            patient_name, age, gender, chief_complaint, duration,
-            allergies, medications, referred_by,
-            priority, priority_label, wait_time, action,
-            matched_rules, matched_descriptions, escalated, escalation_reason
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """,
-        (
-            extracted.get("patient_name", ""),
-            extracted.get("age", ""),
-            extracted.get("gender", ""),
-            extracted.get("chief_complaint", ""),
-            extracted.get("duration", ""),
-            extracted.get("allergies", ""),
-            extracted.get("medications", ""),
-            extracted.get("referred_by", ""),
-            triage.get("priority", ""),
-            triage.get("priority_label", ""),
-            triage.get("wait_time", ""),
-            triage.get("action", ""),
-            ",".join(triage.get("matched_rules", [])),
-            "; ".join(triage.get("matched_descriptions", [])),
-            1 if triage.get("escalated") else 0,
-            triage.get("escalation_reason", ""),
-        ),
+            {_ALL_COLS}
+        ) VALUES ({placeholders})
+    """
+    values = (
+        *(extracted.get(k, "") for k in PATIENT_KEYS),
+        triage.get("priority", ""),
+        triage.get("priority_label", ""),
+        triage.get("wait_time", ""),
+        triage.get("action", ""),
+        ",".join(triage.get("matched_rules", [])),
+        "; ".join(triage.get("matched_descriptions", [])),
+        1 if triage.get("escalated") else 0,
+        triage.get("escalation_reason", ""),
     )
+    cursor = conn.execute(sql, values)
     conn.commit()
     return cursor.lastrowid
 
 
+_PRIORITY_ORDER = "CASE priority WHEN 'red' THEN 1 WHEN 'yellow' THEN 2 WHEN 'green' THEN 3 ELSE 4 END"
+
+
 def list_patients(conn: sqlite3.Connection) -> list[dict[str, Any]]:
     rows = conn.execute(
-        "SELECT * FROM patients ORDER BY CASE priority WHEN 'red' THEN 1 WHEN 'yellow' THEN 2 WHEN 'green' THEN 3 ELSE 4 END, created_at DESC"
+        f"SELECT * FROM patients ORDER BY {_PRIORITY_ORDER}, created_at DESC"
     ).fetchall()
     return [dict(row) for row in rows]
 

@@ -85,9 +85,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
-    { name = "httpx" },
     { name = "pillow" },
-    { name = "pytest" },
     { name = "python-multipart" },
     { name = "uvicorn", extra = ["standard"] },
 ]
@@ -101,9 +99,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.115.0" },
-    { name = "httpx", specifier = ">=0.28.1" },
     { name = "pillow", specifier = ">=10.4.0" },
-    { name = "pytest", specifier = ">=9.0.3" },
     { name = "python-multipart", specifier = ">=0.0.17" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.32.0" },
 ]
