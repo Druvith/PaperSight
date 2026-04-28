@@ -40,21 +40,30 @@
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
+            min-height: -webkit-fill-available;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
         }
 
         .header {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(247, 244, 239, 0.88);
+            background: rgba(247, 244, 239, 0.92);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-subtle);
-            padding: 16px 20px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+        }
+        @media (min-width: 480px) {
+            .header { padding: 14px 20px; }
+        }
+        @media (min-width: 768px) {
+            .header { padding: 16px 20px; }
         }
 
         .logo-text {
@@ -79,7 +88,7 @@
         }
 
         .about-link {
-            padding: 6px 10px;
+            padding: 8px 12px;
             background: transparent;
             border: none;
             color: var(--text-muted);
@@ -89,6 +98,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
             letter-spacing: 0.5px;
+            min-height: 44px;
         }
         .about-link:hover {
             color: var(--text-primary);
@@ -97,7 +107,14 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 24px 20px;
+            padding: 16px 12px;
+        }
+
+        @media (min-width: 480px) {
+            .container { padding: 20px 16px; }
+        }
+        @media (min-width: 768px) {
+            .container { padding: 24px 20px; }
         }
 
         .grid {
@@ -117,7 +134,13 @@
             overflow: hidden;
         }
 
-        .card-body { padding: 24px; }
+        .card-body { padding: 16px; }
+        @media (min-width: 480px) {
+            .card-body { padding: 20px; }
+        }
+        @media (min-width: 768px) {
+            .card-body { padding: 24px; }
+        }
 
         .section { margin-bottom: 32px; }
 
@@ -137,9 +160,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
             width: 100%;
-            padding: 40px 24px;
+            padding: 32px 16px;
             background: var(--bg-tertiary);
             border: 2px dashed var(--border-strong);
             border-radius: var(--radius-md);
@@ -149,6 +172,10 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            min-height: 120px;
+        }
+        @media (min-width: 480px) {
+            .capture-btn { padding: 40px 24px; }
         }
 
         .capture-btn:hover {
@@ -245,6 +272,8 @@
         .triage-banner.yellow::before { background: var(--yellow); }
         .triage-banner.green { background: var(--green-glow); }
         .triage-banner.green::before { background: var(--green); }
+        .triage-banner.blue { background: var(--blue-glow); }
+        .triage-banner.blue::before { background: var(--blue); }
 
         .triage-indicator {
             width: 48px;
@@ -271,6 +300,10 @@
         }
         .triage-indicator.green {
             background: var(--green);
+            color: white;
+        }
+        .triage-indicator.blue {
+            background: var(--blue);
             color: white;
         }
 
@@ -364,13 +397,14 @@
         }
         .patient-item {
             background: var(--bg-secondary);
-            padding: 16px 20px;
+            padding: 14px 16px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
             position: relative;
+            min-height: 52px;
         }
         .patient-item:hover { background: var(--bg-tertiary); }
         .patient-item::before {
@@ -382,6 +416,7 @@
         .patient-item.red::before { background: var(--red); }
         .patient-item.yellow::before { background: var(--yellow); }
         .patient-item.green::before { background: var(--green); }
+        .patient-item.blue::before { background: var(--blue); }
 
         .patient-priority {
             width: 32px;
@@ -410,6 +445,11 @@
             background: var(--green);
             color: #ffffff;
             box-shadow: 0 0 0 3px var(--green-glow), inset 0 0 0 2px rgba(255,255,255,0.3);
+        }
+        .patient-priority.blue {
+            background: var(--blue);
+            color: #ffffff;
+            box-shadow: 0 0 0 3px var(--blue-glow), inset 0 0 0 2px rgba(255,255,255,0.3);
         }
 
         .patient-info { flex: 1; min-width: 0; }
@@ -494,7 +534,7 @@
         }
         .filter-tab {
             flex: 1;
-            padding: 8px 12px;
+            padding: 10px 8px;
             background: transparent;
             border: none;
             border-radius: var(--radius-sm);
@@ -505,6 +545,10 @@
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .filter-tab:hover { color: var(--text-primary); }
         .filter-tab.active {
@@ -523,7 +567,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 16px;
+            padding: 10px 16px;
             background: var(--bg-tertiary);
             border: 1px solid var(--border-strong);
             border-radius: var(--radius-sm);
@@ -534,6 +578,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
             margin-top: 16px;
+            min-height: 44px;
         }
         .print-btn:hover {
             background: var(--bg-elevated);
@@ -591,8 +636,8 @@
         }
         .modal-title { font-size: 16px; font-weight: 700; }
         .modal-close {
-            width: 32px;
-            height: 32px;
+            width: 44px;
+            height: 44px;
             background: var(--bg-tertiary);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
@@ -615,7 +660,7 @@
         }
 
         .delete-btn {
-            padding: 8px 14px;
+            padding: 10px 14px;
             background: transparent;
             border: 1px solid var(--red-dim);
             border-radius: var(--radius-sm);
@@ -628,6 +673,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            min-height: 44px;
         }
         .delete-btn:hover {
             background: var(--red-glow);
@@ -696,7 +742,7 @@
         /* Toast */
         .toast {
             position: fixed;
-            bottom: 24px;
+            bottom: max(24px, env(safe-area-inset-bottom, 0px));
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             padding: 14px 24px;
@@ -969,10 +1015,6 @@
             </div>
         </div>
     </div>
-            </div>
-            <div class="modal-body" id="modalBody"></div>
-        </div>
-    </div>
 
     <div class="toast" id="toast"></div>
 
@@ -1145,6 +1187,28 @@
             }
         }
 
+        const PATIENT_FIELDS = [
+            { key: 'patient_name', label: 'Patient Name' },
+            { key: 'age', label: 'Age' },
+            { key: 'gender', label: 'Gender' },
+            { key: 'chief_complaint', label: 'Chief Complaint' },
+            { key: 'duration', label: 'Duration' },
+            { key: 'allergies', label: 'Allergies' },
+            { key: 'medications', label: 'Medications' },
+            { key: 'referred_by', label: 'Referred By' },
+        ];
+
+        function renderFieldGrid(data, container) {
+            container.innerHTML = PATIENT_FIELDS.map(f => {
+                const value = data[f.key] || '';
+                const isMissing = !value || value === 'unreadable' || value === 'N/A' || value === 'none';
+                const displayValue = isMissing ? '\u2014' : value;
+                const statusClass = isMissing ? 'missing' : 'extracted';
+                const dotClass = isMissing ? 'miss' : 'ok';
+                return `<div class="data-cell"><div class="data-label"><span class="field-status ${dotClass}"></span>${f.label}</div><div class="data-value ${statusClass}">${displayValue}</div></div>`;
+            }).join('');
+        }
+
         function showResults(data) {
             resultsSection.classList.remove('hidden');
             const triage = data.triage;
@@ -1157,32 +1221,7 @@
             triageAction.textContent = triage.action || '--';
             triageWait.textContent = triage.wait_time || '--';
 
-            const fields = [
-                { key: 'patient_name', label: 'Patient Name' },
-                { key: 'age', label: 'Age' },
-                { key: 'gender', label: 'Gender' },
-                { key: 'chief_complaint', label: 'Chief Complaint' },
-                { key: 'duration', label: 'Duration' },
-                { key: 'allergies', label: 'Allergies' },
-                { key: 'medications', label: 'Medications' },
-                { key: 'referred_by', label: 'Referred By' },
-            ];
-
-            dataGrid.innerHTML = fields.map(f => {
-                const value = extracted[f.key] || '';
-                const isMissing = !value || value === 'unreadable' || value === 'N/A' || value === 'none';
-                const displayValue = isMissing ? '—' : value;
-                const statusClass = isMissing ? 'missing' : 'extracted';
-                const dotClass = isMissing ? 'miss' : 'ok';
-                return `
-                    <div class="data-cell">
-                        <div class="data-label">
-                            <span class="field-status ${dotClass}"></span>${f.label}
-                        </div>
-                        <div class="data-value ${statusClass}">${displayValue}</div>
-                    </div>
-                `;
-            }).join('');
+            renderFieldGrid(extracted, dataGrid);
 
             resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -1264,32 +1303,10 @@
                 ? 'Unknown Patient'
                 : patient.patient_name;
             document.getElementById('modalTitle').textContent = modalName;
-            const fields = [
-                { key: 'patient_name', label: 'Patient Name' },
-                { key: 'age', label: 'Age' },
-                { key: 'gender', label: 'Gender' },
-                { key: 'chief_complaint', label: 'Chief Complaint' },
-                { key: 'duration', label: 'Duration' },
-                { key: 'allergies', label: 'Allergies' },
-                { key: 'medications', label: 'Medications' },
-                { key: 'referred_by', label: 'Referred By' },
-            ];
 
-            const dataGridHtml = fields.map(f => {
-                const value = patient[f.key] || '';
-                const isMissing = !value || value === 'unreadable' || value === 'N/A' || value === 'none';
-                const displayValue = isMissing ? '—' : value;
-                const statusClass = isMissing ? 'missing' : 'extracted';
-                const dotClass = isMissing ? 'miss' : 'ok';
-                return `
-                    <div class="data-cell">
-                        <div class="data-label">
-                            <span class="field-status ${dotClass}"></span>${f.label}
-                        </div>
-                        <div class="data-value ${statusClass}">${displayValue}</div>
-                    </div>
-                `;
-            }).join('');
+            const dataGridHtml = document.createElement('div');
+            dataGridHtml.classList.add('data-grid');
+            renderFieldGrid(patient, dataGridHtml);
 
             const rules = patient.matched_rules ? patient.matched_rules.split(',') : [];
             const descriptions = patient.matched_descriptions ? patient.matched_descriptions.split('; ') : [];
@@ -1323,7 +1340,7 @@
                 </div>
                 <div class="modal-section">
                     <div class="modal-section-title">Extracted Data</div>
-                    <div class="data-grid">${dataGridHtml}</div>
+                    ${dataGridHtml.outerHTML}
                 </div>
                 <div class="modal-section">
                     <div class="modal-section-title">Matched Rules</div>
@@ -1373,8 +1390,9 @@
         }
 
         function formatTime(timestamp) {
-            if (!timestamp) return 'Unknown';
-            const date = new Date(timestamp.replace(' ', 'T'));
+            if (!timestamp) return '';
+            const date = new Date(timestamp);
+            if (isNaN(date.getTime())) return timestamp;
             const h = date.getHours().toString().padStart(2, '0');
             const m = date.getMinutes().toString().padStart(2, '0');
             return `${h}:${m}`;
