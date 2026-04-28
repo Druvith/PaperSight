@@ -1,0 +1,35 @@
+[project]
+name = "gemmasight"
+version = "0.1.0"
+description = "Clinical triage assistant powered by Google Gemma 4 E2B."
+requires-python = ">=3.11"
+dependencies = [
+    "pillow>=10.4.0",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "python-multipart>=0.0.17",
+    "pytest>=9.0.3",
+    "httpx>=0.28.1",
+]
+
+[project.scripts]
+test-01-crappy-form-photo = "validation_hackathon.test_01_crappy_form_photo:main"
+test-02-triage-engine = "validation_hackathon.triage_engine:main"
+test-03-memory-stress = "validation_hackathon.test_03_memory_stress:main"
+gemmasight-server = "gemmasight.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+package = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/validation_hackathon", "src/gemmasight"]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.0.3",
+]

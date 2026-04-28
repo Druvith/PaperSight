@@ -1,0 +1,61 @@
+{
+  "meta": {
+    "name": "Rural Hospital Triage Rules",
+    "version": "1.0.0",
+    "sources": [
+      "WHO Emergency Triage Assessment and Treatment (ETAT)",
+      "South African Triage Scale (SATS)",
+      "MSF Clinical Guidelines"
+    ],
+    "principle": "When multiple rules match, use the HIGHEST priority. Age < 5 and age > 60 escalate any non-red case by one level.",
+    "note": "This is decision-support, not a substitute for clinical judgment.",
+    "limitations": [
+      "No vital signs (BP, SpO2, pulse, temperature) — triage is symptom-based only.",
+      "Uncovered red flags: hemoptysis (coughing blood), bloody diarrhea, anaphylaxis, choking, chemical eye injury.",
+      "Injury severity is keyword-dependent — 'severe injury' without specific keywords defaults to yellow.",
+      "Burns of all sizes are red — small superficial burns are over-triaged.",
+      "Psychiatric complaints and pain severity are not modeled."
+    ]
+  },
+  "priority_levels": {
+    "red":    {"label": "Immediate",   "wait": "0 min",    "action": "See now — life-threatening"},
+    "yellow": {"label": "Priority",    "wait": "< 30 min", "action": "See soon — serious"},
+    "green":  {"label": "Non-urgent",  "wait": "< 120 min","action": "Queue — stable"},
+    "blue":   {"label": "Administrative","wait": "N/A",    "action": "Paperwork only"}
+  },
+  "rules": [
+    {"id": "R01", "priority": "red",    "keywords": ["chest pain", "heart attack", "myocardial"], "description": "Chest pain — possible cardiac emergency"},
+    {"id": "R02", "priority": "red",    "keywords": ["shortness of breath", "cannot breathe", "difficulty breathing", "breathless", "dyspnoea", "dyspnea"], "description": "Respiratory distress — possible airway compromise"},
+    {"id": "R03", "priority": "red",    "keywords": ["unconscious", "fainted", "collapsed", "not responding", "unresponsive", "coma"], "description": "Altered consciousness — neurological emergency"},
+    {"id": "R04", "priority": "red",    "keywords": ["severe bleeding", "heavy bleeding", "hemorrhage", "haemorrhage", "bleeding heavily"], "description": "Severe hemorrhage — shock risk"},
+    {"id": "R05", "priority": "red",    "keywords": ["convulsions", "seizure", "fits", "fitting"], "description": "Active seizure — airway and brain injury risk"},
+    {"id": "R06", "priority": "red",    "keywords": ["poisoning", "swallowed poison", "overdose", "snake bite", "snakebite"], "description": "Toxic exposure — time-critical antidote"},
+    {"id": "R07", "priority": "red",    "keywords": ["severe dehydration", "very thirsty", "not drinking", "dry mouth", "sunken eyes"], "description": "Severe dehydration — shock and organ failure risk"},
+    {"id": "R08", "priority": "red",    "keywords": ["severe headache", "worst headache", "stiff neck", "neck stiffness"], "description": "Severe headache with neck stiffness — possible meningitis"},
+    {"id": "R09", "priority": "red",    "keywords": ["burn", "burns", "scald"], "description": "Burn injury — airway and fluid loss risk"},
+    {"id": "R10", "priority": "red",    "keywords": ["abdominal pain", "stomach pain", "belly pain"], "condition": "age < 5", "description": "Abdominal pain in child under 5 — possible intussusception or appendicitis"},
+
+    {"id": "Y01", "priority": "yellow", "keywords": ["fever", "high temperature", "hot body"], "description": "Fever — possible sepsis, malaria, or typhoid"},
+    {"id": "Y02", "priority": "yellow", "keywords": ["vomiting", "throwing up", "vomited"], "description": "Vomiting — dehydration and electrolyte risk"},
+    {"id": "Y03", "priority": "yellow", "keywords": ["diarrhea", "diarrhoea", "loose stools", "watery stools"], "description": "Diarrhea — dehydration and infectious cause"},
+    {"id": "Y04", "priority": "yellow", "keywords": ["cough", "coughing"], "description": "Persistent cough — possible pneumonia or TB"},
+    {"id": "Y05", "priority": "yellow", "keywords": ["rash", "skin rash", "spots"], "description": "Rash — possible measles, dengue, or allergic reaction"},
+    {"id": "R12", "priority": "red",    "keywords": ["fracture", "broken", "polytrauma", "multiple injuries", "crush injury", "amputation"], "description": "Major trauma — fracture or crush injury"},
+    {"id": "R13", "priority": "red",    "keywords": ["fall", "fell", "fallen"], "condition": "age > 60", "description": "Fall in elderly patient — high risk for hip fracture or intracranial bleed"},
+    {"id": "Y06", "priority": "yellow", "keywords": ["wound", "laceration", "sprain", "dislocation", "injury"], "description": "Minor trauma — wound, sprain, or soft tissue injury"},
+    {"id": "Y07", "priority": "yellow", "keywords": ["headache", "head pain"], "description": "Headache — possible migraine, tension, or early infection"},
+    {"id": "Y08", "priority": "yellow", "keywords": ["ear pain", "earache", "sore ear"], "description": "Ear pain — possible otitis media or externa"},
+    {"id": "Y09", "priority": "yellow", "keywords": ["eye pain", "red eye", "eye discharge", "eye problem"], "description": "Eye complaint — possible infection, foreign body, or glaucoma"},
+    {"id": "R11", "priority": "red",    "keywords": ["pregnant", "pregnancy", "labor", "labour", "bleeding during pregnancy"], "description": "Obstetric emergency — maternal and fetal risk"},
+
+    {"id": "G01", "priority": "green",  "keywords": ["follow up", "follow-up", "review", "check up", "check-up", "routine"], "description": "Routine follow-up — stable chronic condition"},
+    {"id": "G02", "priority": "green",  "keywords": ["minor", "small", "tiny", "cut", "scratch", "bruise"], "description": "Minor superficial injury — no systemic concern"},
+    {"id": "G03", "priority": "green",  "keywords": ["prescription refill", "medication refill", "repeat prescription"], "description": "Medication refill — no acute complaint"},
+
+    {"id": "B01", "priority": "blue",   "keywords": ["certificate", "form filling", "paperwork", "insurance", "registration"], "description": "Administrative request — no clinical need"}
+  ],
+  "escalation": {
+    "pediatric": {"condition": "age < 5",  "effect": "Bump non-red up one level", "reason": "Children decompensate fast"},
+    "elderly":   {"condition": "age > 60", "effect": "Bump non-red up one level", "reason": "Atypical presentations"}
+  }
+}
