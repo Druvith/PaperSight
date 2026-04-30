@@ -79,14 +79,15 @@ ollama run gemma4:e2b "say ready"
 ### 4. Start the server
 
 ```bash
-PYTHONPATH=src uv run uvicorn gemmasight.main:app --host 127.0.0.1 --port 8000
+PYTHONPATH=src uv run uvicorn gemmasight.main:app --host 0.0.0.0 --port 8000
 ```
 
-> **Note:** `PYTHONPATH=src` is currently required due to a module resolution issue with the `gemmasight-server` console script.
+> **Note:** `PYTHONPATH=src` is currently required due to a module resolution issue with the `gemmasight-server` console script. Use `0.0.0.0` (not `127.0.0.1`) so other devices on the same Wi-Fi network can reach the server.
 
 ### 5. Open in browser
 
-Navigate to `http://127.0.0.1:8000`
+- **On this Mac:** `http://127.0.0.1:8000`
+- **On phone / tablet (same Wi-Fi):** find your Mac's local IP with `ipconfig getifaddr en0`, then open `http://<YOUR_IP>:8000`
 
 ---
 
