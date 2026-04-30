@@ -67,9 +67,18 @@ If a field is completely unreadable due to scribbles or heavy blur, mark it "unr
 Do not add fields not listed above."""
 
 
+# Pre-compiled patterns for stripping model "thinking" tags from output.
+_THINKING_PATTERNS = [
+    # Gemma-style channel thought blocks: <|channel|>thought ... <channel|>
+    re.compile(r"<\|channel\|>thought\s*.*?<channel\|>", re.DOTALL),
+    # Generic think tags: <|think|> ... <|/think|>
+    re.compile(r"<\|think\|>.*?<\|/think\|>", re.DOTALL),
+]
+
+
 def _strip_thinking(text: str) -> str:
-    text = re.sub(r"<\|channel\|>thought\s*.*?<channel\|>", "", text, flags=re.DOTALL)
-    text = re.sub(r"<\|think\|>.*?<\|/think\|>", "", text, flags=re.DOTALL)
+    for pat in _THINKING_PATTERNS:
+        text = pat.sub("", text)
     return text.strip()
 
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import warnings
 from pathlib import Path
 from typing import Any
 
@@ -47,25 +48,37 @@ class TriageEngine:
                 return True
         return False
 
+    # Whitelisted comparison operators for rule conditions.
+    _CONDITION_OPS = {"<": lambda a, b: a < b, ">": lambda a, b: a > b, "==": lambda a, b: a == b}
+
     def _check_condition(self, condition: str | None, data: dict[str, Any]) -> bool:
+        """Evaluate a numeric comparison condition like 'age < 5'.
+
+        Returns True when the condition is absent, malformed, or the referenced
+        field is missing — this keeps the engine permissive and avoids locking
+        patients out of triage due to a broken rule file.
+        """
         if not condition:
             return True
-        # Simple condition parser: "age < 5" or "age > 60"
-        try:
-            parts = condition.split()
-            field = parts[0]
-            op = parts[1]
-            value = int(parts[2])
-            actual = int(data.get(field, "0"))
-            if op == "<":
-                return actual < value
-            elif op == ">":
-                return actual > value
-            elif op == "==":
-                return actual == value
-        except Exception:
+
+        parts = condition.split()
+        if len(parts) != 3:
+            warnings.warn(f"Malformed condition (expected 3 parts): {condition!r}")
             return True
-        return True
+
+        field, op, value_str = parts
+        if op not in self._CONDITION_OPS:
+            warnings.warn(f"Unsupported operator in condition: {condition!r}")
+            return True
+
+        try:
+            value = int(value_str)
+            actual = int(data.get(field, "0") or "0")
+        except (ValueError, TypeError):
+            warnings.warn(f"Non-numeric value in condition: {condition!r}")
+            return True
+
+        return self._CONDITION_OPS[op](actual, value)
 
     def evaluate(self, data: dict[str, Any]) -> dict[str, Any]:
         chief = str(data.get("chief_complaint", ""))

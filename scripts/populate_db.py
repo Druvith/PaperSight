@@ -8,20 +8,26 @@ import sys
 sys.path.insert(0, "src")
 
 from gemmasight.database import init_db, insert_patient
+from gemmasight.schema import PATIENT_KEYS
+
+def _ex(**kwargs: str) -> dict[str, str]:
+    """Build an extracted dict from keyword args, filling missing keys with ''."""
+    return {k: kwargs.get(k, "") for k in PATIENT_KEYS}
+
 
 # Realistic patient records covering all priority levels and common rural presentations
 PATIENTS = [
     {
-        "extracted": {
-            "patient_name": "Ramesh Iyer",
-            "age": "67",
-            "gender": "Male",
-            "chief_complaint": "chest-pain radiating to left arm",
-            "duration": "15 minutes",
-            "allergies": "None known",
-            "medications": "Aspirin 75mg",
-            "referred_by": "Ambulance",
-        },
+        "extracted": _ex(
+            patient_name="Ramesh Iyer",
+            age="67",
+            gender="Male",
+            chief_complaint="chest-pain radiating to left arm",
+            duration="15 minutes",
+            allergies="None known",
+            medications="Aspirin 75mg",
+            referred_by="Ambulance",
+        ),
         "triage": {
             "priority": "red",
             "priority_label": "Immediate",
@@ -34,16 +40,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Anil Kumar",
-            "age": "54",
-            "gender": "Male",
-            "chief_complaint": "difficulty-breathing",
-            "duration": "2 hours",
-            "allergies": "None",
-            "medications": "Salbutamol inhaler",
-            "referred_by": "ASHA worker",
-        },
+        "extracted": _ex(
+            patient_name="Anil Kumar",
+            age="54",
+            gender="Male",
+            chief_complaint="difficulty-breathing",
+            duration="2 hours",
+            allergies="None",
+            medications="Salbutamol inhaler",
+            referred_by="ASHA worker",
+        ),
         "triage": {
             "priority": "red",
             "priority_label": "Immediate",
@@ -56,16 +62,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Leela Nair",
-            "age": "29",
-            "gender": "Female",
-            "chief_complaint": "severe-headache and neck stiffness",
-            "duration": "1 day",
-            "allergies": "None",
-            "medications": "Paracetamol",
-            "referred_by": "Self",
-        },
+        "extracted": _ex(
+            patient_name="Leela Nair",
+            age="29",
+            gender="Female",
+            chief_complaint="severe-headache and neck stiffness",
+            duration="1 day",
+            allergies="None",
+            medications="Paracetamol",
+            referred_by="Self",
+        ),
         "triage": {
             "priority": "red",
             "priority_label": "Immediate",
@@ -78,16 +84,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Maya Raman",
-            "age": "43",
-            "gender": "Female",
-            "chief_complaint": "high-fever and chills",
-            "duration": "3 days",
-            "allergies": "Penicillin",
-            "medications": "Metformin",
-            "referred_by": "ASHA worker",
-        },
+        "extracted": _ex(
+            patient_name="Maya Raman",
+            age="43",
+            gender="Female",
+            chief_complaint="high-fever and chills",
+            duration="3 days",
+            allergies="Penicillin",
+            medications="Metformin",
+            referred_by="ASHA worker",
+        ),
         "triage": {
             "priority": "yellow",
             "priority_label": "Priority",
@@ -100,16 +106,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Sara Dsouza",
-            "age": "8",
-            "gender": "Female",
-            "chief_complaint": "vomiting and abdominal-pain",
-            "duration": "6 hours",
-            "allergies": "None",
-            "medications": "ORS sachets",
-            "referred_by": "Mother",
-        },
+        "extracted": _ex(
+            patient_name="Sara Dsouza",
+            age="8",
+            gender="Female",
+            chief_complaint="vomiting and abdominal-pain",
+            duration="6 hours",
+            allergies="None",
+            medications="ORS sachets",
+            referred_by="Mother",
+        ),
         "triage": {
             "priority": "yellow",
             "priority_label": "Priority",
@@ -124,16 +130,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Suresh Patel",
-            "age": "58",
-            "gender": "Male",
-            "chief_complaint": "fall from ladder, leg pain",
-            "duration": "30 minutes",
-            "allergies": "None",
-            "medications": "Amlodipine",
-            "referred_by": "Coworker",
-        },
+        "extracted": _ex(
+            patient_name="Suresh Patel",
+            age="58",
+            gender="Male",
+            chief_complaint="fall from ladder, leg pain",
+            duration="30 minutes",
+            allergies="None",
+            medications="Amlodipine",
+            referred_by="Coworker",
+        ),
         "triage": {
             "priority": "red",
             "priority_label": "Immediate",
@@ -146,16 +152,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Meena Kumari",
-            "age": "72",
-            "gender": "Female",
-            "chief_complaint": "fall and hip-pain",
-            "duration": "3 hours",
-            "allergies": "None known",
-            "medications": "Calcium supplements",
-            "referred_by": "Family member",
-        },
+        "extracted": _ex(
+            patient_name="Meena Kumari",
+            age="72",
+            gender="Female",
+            chief_complaint="fall and hip-pain",
+            duration="3 hours",
+            allergies="None known",
+            medications="Calcium supplements",
+            referred_by="Family member",
+        ),
         "triage": {
             "priority": "red",
             "priority_label": "Immediate",
@@ -168,16 +174,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Sunita Rao",
-            "age": "26",
-            "gender": "Female",
-            "chief_complaint": "abdominal-pain and bleeding during pregnancy",
-            "duration": "1 hour",
-            "allergies": "None",
-            "medications": "Iron tablets",
-            "referred_by": "ANM",
-        },
+        "extracted": _ex(
+            patient_name="Sunita Rao",
+            age="26",
+            gender="Female",
+            chief_complaint="abdominal-pain and bleeding during pregnancy",
+            duration="1 hour",
+            allergies="None",
+            medications="Iron tablets",
+            referred_by="ANM",
+        ),
         "triage": {
             "priority": "red",
             "priority_label": "Immediate",
@@ -190,16 +196,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Lakshmi Devi",
-            "age": "34",
-            "gender": "Female",
-            "chief_complaint": "high-fever and severe-headache",
-            "duration": "2 days",
-            "allergies": "Sulfa drugs",
-            "medications": "Paracetamol",
-            "referred_by": "ASHA worker",
-        },
+        "extracted": _ex(
+            patient_name="Lakshmi Devi",
+            age="34",
+            gender="Female",
+            chief_complaint="high-fever and severe-headache",
+            duration="2 days",
+            allergies="Sulfa drugs",
+            medications="Paracetamol",
+            referred_by="ASHA worker",
+        ),
         "triage": {
             "priority": "yellow",
             "priority_label": "Priority",
@@ -212,16 +218,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Aarav Sharma",
-            "age": "4",
-            "gender": "Male",
-            "chief_complaint": "cough and fever",
-            "duration": "5 days",
-            "allergies": "None",
-            "medications": "Vitamin D drops",
-            "referred_by": "Mother",
-        },
+        "extracted": _ex(
+            patient_name="Aarav Sharma",
+            age="4",
+            gender="Male",
+            chief_complaint="cough and fever",
+            duration="5 days",
+            allergies="None",
+            medications="Vitamin D drops",
+            referred_by="Mother",
+        ),
         "triage": {
             "priority": "red",
             "priority_label": "Immediate",
@@ -237,16 +243,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Rajesh Gupta",
-            "age": "45",
-            "gender": "Male",
-            "chief_complaint": "wound on hand, bleeding",
-            "duration": "20 minutes",
-            "allergies": "None",
-            "medications": "None",
-            "referred_by": "Self",
-        },
+        "extracted": _ex(
+            patient_name="Rajesh Gupta",
+            age="45",
+            gender="Male",
+            chief_complaint="wound on hand, bleeding",
+            duration="20 minutes",
+            allergies="None",
+            medications="None",
+            referred_by="Self",
+        ),
         "triage": {
             "priority": "yellow",
             "priority_label": "Priority",
@@ -259,16 +265,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Fatima Begum",
-            "age": "62",
-            "gender": "Female",
-            "chief_complaint": "diarrhea and vomiting",
-            "duration": "1 day",
-            "allergies": "None",
-            "medications": "ORS",
-            "referred_by": "Daughter",
-        },
+        "extracted": _ex(
+            patient_name="Fatima Begum",
+            age="62",
+            gender="Female",
+            chief_complaint="diarrhea and vomiting",
+            duration="1 day",
+            allergies="None",
+            medications="ORS",
+            referred_by="Daughter",
+        ),
         "triage": {
             "priority": "red",
             "priority_label": "Immediate",
@@ -284,16 +290,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Kavita Nair",
-            "age": "19",
-            "gender": "Female",
-            "chief_complaint": "skin rash and itching",
-            "duration": "2 days",
-            "allergies": "Dust",
-            "medications": "Cetirizine",
-            "referred_by": "Self",
-        },
+        "extracted": _ex(
+            patient_name="Kavita Nair",
+            age="19",
+            gender="Female",
+            chief_complaint="skin rash and itching",
+            duration="2 days",
+            allergies="Dust",
+            medications="Cetirizine",
+            referred_by="Self",
+        ),
         "triage": {
             "priority": "yellow",
             "priority_label": "Priority",
@@ -306,16 +312,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Venkatesh Rao",
-            "age": "35",
-            "gender": "Male",
-            "chief_complaint": "follow-up for diabetes",
-            "duration": "N/A",
-            "allergies": "None",
-            "medications": "Metformin",
-            "referred_by": "Dr. Patel",
-        },
+        "extracted": _ex(
+            patient_name="Venkatesh Rao",
+            age="35",
+            gender="Male",
+            chief_complaint="follow-up for diabetes",
+            duration="N/A",
+            allergies="None",
+            medications="Metformin",
+            referred_by="Dr. Patel",
+        ),
         "triage": {
             "priority": "green",
             "priority_label": "Non-urgent",
@@ -328,16 +334,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Baby Priya",
-            "age": "2",
-            "gender": "Female",
-            "chief_complaint": "minor cut on finger",
-            "duration": "10 minutes",
-            "allergies": "None",
-            "medications": "None",
-            "referred_by": "Mother",
-        },
+        "extracted": _ex(
+            patient_name="Baby Priya",
+            age="2",
+            gender="Female",
+            chief_complaint="minor cut on finger",
+            duration="10 minutes",
+            allergies="None",
+            medications="None",
+            referred_by="Mother",
+        ),
         "triage": {
             "priority": "yellow",
             "priority_label": "Priority",
@@ -350,16 +356,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Joseph Thomas",
-            "age": "55",
-            "gender": "Male",
-            "chief_complaint": "prescription refill for BP medication",
-            "duration": "N/A",
-            "allergies": "None",
-            "medications": "Amlodipine",
-            "referred_by": "Self",
-        },
+        "extracted": _ex(
+            patient_name="Joseph Thomas",
+            age="55",
+            gender="Male",
+            chief_complaint="prescription refill for BP medication",
+            duration="N/A",
+            allergies="None",
+            medications="Amlodipine",
+            referred_by="Self",
+        ),
         "triage": {
             "priority": "green",
             "priority_label": "Non-urgent",
@@ -372,16 +378,16 @@ PATIENTS = [
         },
     },
     {
-        "extracted": {
-            "patient_name": "Geeta Sharma",
-            "age": "28",
-            "gender": "Female",
-            "chief_complaint": "eye pain and redness",
-            "duration": "1 day",
-            "allergies": "None",
-            "medications": "None",
-            "referred_by": "Self",
-        },
+        "extracted": _ex(
+            patient_name="Geeta Sharma",
+            age="28",
+            gender="Female",
+            chief_complaint="eye pain and redness",
+            duration="1 day",
+            allergies="None",
+            medications="None",
+            referred_by="Self",
+        ),
         "triage": {
             "priority": "yellow",
             "priority_label": "Priority",
