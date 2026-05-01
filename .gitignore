@@ -5,6 +5,6 @@ dist/
 build/
 .pytest_cache/
 artifacts/
-gemmasight.db
+papersight.db
 .playwright-cli/
 uploads/

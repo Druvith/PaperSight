@@ -1,6 +1,10 @@
-# GemmaSight
+# PaperSight
 
-Clinical triage assistant powered by **Google Gemma 4 E2B**. Photographs paper intake forms, extracts patient data with a vision LLM, and assigns priority scores using deterministic clinical rules — fully offline on a Mac Mini M2 with 8GB RAM.
+Clinical triage assistant that photographs paper intake forms, extracts patient data with a vision LLM, and assigns priority scores using deterministic clinical rules — fully offline on a Mac Mini M2 with 8GB RAM.
+
+Powered by **Gemma 4 E2B** via [Ollama](https://ollama.com) for on-device serving.
+
+*Gemma is a trademark of Google LLC.*
 
 Built for the **Kaggle "Gemma 4 Good Hackathon"** (deadline: May 18, 2026).
 
@@ -79,10 +83,10 @@ ollama run gemma4:e2b "say ready"
 ### 4. Start the server
 
 ```bash
-PYTHONPATH=src uv run uvicorn gemmasight.main:app --host 0.0.0.0 --port 8000
+PYTHONPATH=src uv run uvicorn papersight.main:app --host 0.0.0.0 --port 8000
 ```
 
-> **Note:** `PYTHONPATH=src` is currently required due to a module resolution issue with the `gemmasight-server` console script. Use `0.0.0.0` (not `127.0.0.1`) so other devices on the same Wi-Fi network can reach the server.
+> **Note:** `PYTHONPATH=src` is currently required due to a module resolution issue with the `papersight-server` console script. Use `0.0.0.0` (not `127.0.0.1`) so other devices on the same Wi-Fi network can reach the server.
 
 ### 5. Open in browser
 

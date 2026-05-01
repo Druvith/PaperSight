@@ -1,4 +1,4 @@
-"""Populate GemmaSight database with realistic test data for demos.
+"""Populate PaperSight database with realistic test data for demos.
 
 Usage:
     PYTHONPATH=src uv run python scripts/populate_db.py
@@ -7,8 +7,8 @@ Usage:
 import sys
 sys.path.insert(0, "src")
 
-from gemmasight.database import init_db, insert_patient
-from gemmasight.schema import PATIENT_KEYS
+from papersight.database import init_db, insert_patient
+from papersight.schema import PATIENT_KEYS
 
 def _ex(**kwargs: str) -> dict[str, str]:
     """Build an extracted dict from keyword args, filling missing keys with ''."""

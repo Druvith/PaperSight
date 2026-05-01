@@ -1,4 +1,4 @@
-"""API tests for GemmaSight endpoints.
+"""API tests for PaperSight endpoints.
 
 Run with: UV_PROJECT_ENVIRONMENT=.venv-test-01 uv run pytest tests/ -v
 """
@@ -17,16 +17,16 @@ import sys
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 # Use a test database
-os.environ["GEMMASIGHT_DB"] = ":memory:"
+os.environ["PAPERSIGHT_DB"] = ":memory:"
 
-from gemmasight.main import app
-from gemmasight.database import init_db
-from gemmasight.schema import PATIENT_KEYS
+from papersight.main import app
+from papersight.database import init_db
+from papersight.schema import PATIENT_KEYS
 
 client = TestClient(app)
 
 # Override the global db with in-memory for tests
-import gemmasight.main as main_module
+import papersight.main as main_module
 main_module.db = init_db(":memory:")
 
 

@@ -1,4 +1,4 @@
-"""Unified form image generator for GemmaSight test fixtures.
+"""Unified form image generator for PaperSight test fixtures.
 
 Supports three styles:
   * standard  — photographed-paper look with optional noise/blur/rotation

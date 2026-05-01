@@ -1,4 +1,4 @@
-"""Shared patient field schema for GemmaSight.
+"""Shared patient field schema for PaperSight.
 
 Single source of truth for the 8 extracted patient fields.
 """

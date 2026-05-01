@@ -1,4 +1,4 @@
-"""GemmaSight FastAPI server.
+"""PaperSight FastAPI server.
 
 Endpoints:
   GET  /              — Serve frontend (responsive, works on any device)
@@ -36,7 +36,7 @@ logging.basicConfig(
     format="%(asctime)s | %(levelname)-8s | %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
-logger = logging.getLogger("gemmasight")
+logger = logging.getLogger("papersight")
 
 
 class RequestLoggingMiddleware:
@@ -85,16 +85,16 @@ db = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global db
-    db_path = os.environ.get("GEMMASIGHT_DB")
+    db_path = os.environ.get("PAPERSIGHT_DB")
     db = init_db(db_path)
-    logger.info("Database ready: %s", db_path or "gemmasight.db")
+    logger.info("Database ready: %s", db_path or "papersight.db")
     logger.info("Ollama endpoint: %s | model: %s | timeout: %ds", OLLAMA_HOST, OLLAMA_MODEL, TIMEOUT)
     yield
     db.close()
     logger.info("Server shutting down — database closed.")
 
 
-app = FastAPI(title="GemmaSight", lifespan=lifespan)
+app = FastAPI(title="PaperSight", lifespan=lifespan)
 app.add_middleware(RequestLoggingMiddleware)
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 

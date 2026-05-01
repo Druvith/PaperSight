@@ -1,7 +1,7 @@
 [project]
-name = "gemmasight"
+name = "papersight"
 version = "0.1.0"
-description = "Clinical triage assistant powered by Google Gemma 4 E2B."
+description = "Clinical triage assistant powered by Google Gemma 4 E2B via Ollama."
 requires-python = ">=3.11"
 dependencies = [
     "pillow>=10.4.0",
@@ -14,7 +14,7 @@ dependencies = [
 test-01-crappy-form-photo = "validation_hackathon.test_01_crappy_form_photo:main"
 test-02-triage-engine = "validation_hackathon.triage_engine:main"
 test-03-memory-stress = "validation_hackathon.test_03_memory_stress:main"
-gemmasight-server = "gemmasight.main:main"
+papersight-server = "papersight.main:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -24,7 +24,7 @@ build-backend = "hatchling.build"
 package = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/gemmasight"]
+packages = ["src/papersight"]
 
 [dependency-groups]
 dev = [

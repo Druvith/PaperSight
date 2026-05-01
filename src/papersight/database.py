@@ -1,4 +1,4 @@
-"""SQLite database layer for GemmaSight."""
+"""SQLite database layer for PaperSight."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from typing import Any
 
 from .schema import PATIENT_KEYS
 
-DB_PATH = Path("gemmasight.db")
+DB_PATH = Path("papersight.db")
 
 # Patient columns come from schema; triage columns are appended.
 _PATIENT_COLS = ", ".join(PATIENT_KEYS)
