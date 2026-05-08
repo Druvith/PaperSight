@@ -87,22 +87,13 @@ PYTHONPATH=src uv run uvicorn papersight.main:app --host 0.0.0.0 --port 8000
 
 ## Caveats & Limitations
 
-PaperSight is designed as **clinical decision-support**, not a replacement for trained clinical judgment. A nurse or doctor must always verify the triage and examine the patient.
+PaperSight is **clinical decision-support**, not a replacement for trained clinical judgment. A nurse or doctor must always verify the triage and examine the patient.
 
-### Intentionally deterministic
-Triage is rule-based (WHO ETAT + SATS + MSF), not LLM-based. This makes scoring auditable and reproducible, but it also means the system cannot reason about novel presentations, atypical symptoms, or context that a clinician would recognize.
-
-### Extraction is brittle
-The vision model reads photographed paper forms. Output quality depends on handwriting, lighting, blur, and rotation. We normalize hyphenated compounds (`chest-pain` → `chest pain`) before keyword matching, but we do not perform full NLP (no stemming, no synonym expansion). If a field is unreadable, it is marked `"unreadable"` and collected at bedside.
-
-### No vital signs
-Triage is symptom-based only. Blood pressure, SpO₂, pulse, and temperature are not captured. A patient triaged as Green can still be deteriorating silently.
-
-### Offline constraints
-No cloud connectivity means no model updates, no cross-device synchronization, and no remote backup. The Mac Mini is a single point of failure. If it loses power, the queue is unavailable until it restarts.
-
-### Hardware ceiling
-Target hardware is a Mac Mini M2 with 8GB RAM. Image size is capped at 10 MB to avoid OOM. Context window is limited to 4,096 tokens. There is no batch processing.
+- **Deterministic triage** — rule-based (WHO ETAT + SATS + MSF), not LLM-based. Auditable and reproducible, but cannot reason about novel or atypical presentations.
+- **Brittle extraction** — vision model output depends on handwriting, blur, and lighting. Hyphenated compounds are normalized (`chest-pain` → `chest pain`), but there is no stemming or synonym expansion. Unreadable fields are marked `"unreadable"` and collected at bedside.
+- **No vital signs** — triage is symptom-based only. BP, SpO₂, pulse, and temperature are not captured.
+- **Offline constraints** — no cloud means no model updates, no sync, and no remote backup. The Mac Mini is a single point of failure.
+- **Hardware ceiling** — 8GB RAM target. Image uploads capped at 10 MB. Context window limited to 4,096 tokens. No batch processing.
 
 ---
 
