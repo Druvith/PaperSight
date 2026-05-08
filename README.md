@@ -109,7 +109,7 @@ PYTHONPATH=src uv run uvicorn papersight.main:app --host 0.0.0.0 --port 8000
 ## Key Design Decisions
 
 - **Rule-based triage**, not LLM-based — deterministic, auditable, safe for clinical use
-- **Single-file frontend** (`static/index.html`) — no build step, works offline, easy to iterate
+- **Static frontend modules** (`static/index.html`, `static/css/`, `static/js/`) — no build step, works offline, easy to iterate
 - **Warm parchment theme** (`#ede8df`) — easier on eyes under fluorescent lighting
 - **Temperature = 0** for deterministic JSON extraction
 - **Hyphen normalization** (`chest-pain` → `chest pain`) before keyword matching
