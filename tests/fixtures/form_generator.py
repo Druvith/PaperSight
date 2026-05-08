@@ -5,13 +5,12 @@ Supports three styles:
   * clear     — large crisp text, no distortions
   * minimal   — only age + chief complaint
 
-Usage:
+Regenerate all fixtures:
     uv run python tests/fixtures/form_generator.py
 """
 
 from __future__ import annotations
 
-import os
 import random
 from pathlib import Path
 

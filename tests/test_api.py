@@ -1,11 +1,10 @@
 """API tests for PaperSight endpoints.
 
-Run with: UV_PROJECT_ENVIRONMENT=.venv-test-01 uv run pytest tests/ -v
+Run with: uv run pytest tests/ -v
 """
 
 from __future__ import annotations
 
-import json
 import os
 from pathlib import Path
 from unittest.mock import patch
@@ -75,10 +74,6 @@ def test_extract_success():
 
     assert response.status_code == 200
     data = response.json()
-    
-    # Debug: print actual response if test fails
-    if "patient_name" not in data.get("extracted", {}):
-        print("DEBUG RESPONSE:", json.dumps(data, indent=2))
 
     assert "patient_id" in data
     assert "extracted" in data

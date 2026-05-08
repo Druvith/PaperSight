@@ -5,6 +5,8 @@ dist/
 build/
 .pytest_cache/
 artifacts/
-papersight.db
+*.db
 .playwright-cli/
 uploads/
+tests/fixtures/forms/
+.qodo/
