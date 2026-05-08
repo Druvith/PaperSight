@@ -46,6 +46,7 @@
     {"id": "Y07", "priority": "yellow", "keywords": ["headache", "head pain"], "description": "Headache — possible migraine, tension, or early infection"},
     {"id": "Y08", "priority": "yellow", "keywords": ["ear pain", "earache", "sore ear"], "description": "Ear pain — possible otitis media or externa"},
     {"id": "Y09", "priority": "yellow", "keywords": ["eye pain", "red eye", "eye discharge", "eye problem"], "description": "Eye complaint — possible infection, foreign body, or glaucoma"},
+    {"id": "Y10", "priority": "yellow", "keywords": ["fall", "fell", "fallen"], "description": "Fall — possible fracture or head injury, assess urgently"},
     {"id": "R11", "priority": "red",    "keywords": ["pregnant", "pregnancy", "labor", "labour", "bleeding during pregnancy"], "description": "Obstetric emergency — maternal and fetal risk"},
 
     {"id": "G01", "priority": "green",  "keywords": ["follow up", "follow-up", "review", "check up", "check-up", "routine"], "description": "Routine follow-up — stable chronic condition"},
