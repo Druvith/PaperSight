@@ -1,8 +1,8 @@
+# PaperSight
+
 <p align="center">
   <img src="assets/papersight_icon.png" width="120" alt="PaperSight logo">
 </p>
-
-# PaperSight
 
 Clinical triage assistant that photographs paper intake forms, extracts patient data with a vision LLM, and assigns priority scores using deterministic clinical rules — fully offline on a Mac Mini M2 with 8GB RAM.
 
@@ -85,14 +85,24 @@ PYTHONPATH=src uv run uvicorn papersight.main:app --host 0.0.0.0 --port 8000
 
 ---
 
-## Key Design Decisions
+## Caveats & Limitations
 
-- **Rule-based triage**, not LLM-based — deterministic, auditable, safe for clinical use
-- **Static frontend modules** (`static/index.html`, `static/css/`, `static/js/`) — no build step, works offline, easy to iterate
-- **Warm parchment theme** (`#ede8df`) — easier on eyes under fluorescent lighting
-- **Temperature = 0** for deterministic JSON extraction
-- **Hyphen normalization** (`chest-pain` → `chest pain`) before keyword matching
-- **Elderly fall rule (R13)** — age > 60 + fall → automatic Red priority
+PaperSight is designed as **clinical decision-support**, not a replacement for trained clinical judgment. A nurse or doctor must always verify the triage and examine the patient.
+
+### Intentionally deterministic
+Triage is rule-based (WHO ETAT + SATS + MSF), not LLM-based. This makes scoring auditable and reproducible, but it also means the system cannot reason about novel presentations, atypical symptoms, or context that a clinician would recognize.
+
+### Extraction is brittle
+The vision model reads photographed paper forms. Output quality depends on handwriting, lighting, blur, and rotation. We normalize hyphenated compounds (`chest-pain` → `chest pain`) before keyword matching, but we do not perform full NLP (no stemming, no synonym expansion). If a field is unreadable, it is marked `"unreadable"` and collected at bedside.
+
+### No vital signs
+Triage is symptom-based only. Blood pressure, SpO₂, pulse, and temperature are not captured. A patient triaged as Green can still be deteriorating silently.
+
+### Offline constraints
+No cloud connectivity means no model updates, no cross-device synchronization, and no remote backup. The Mac Mini is a single point of failure. If it loses power, the queue is unavailable until it restarts.
+
+### Hardware ceiling
+Target hardware is a Mac Mini M2 with 8GB RAM. Image size is capped at 10 MB to avoid OOM. Context window is limited to 4,096 tokens. There is no batch processing.
 
 ---
 
