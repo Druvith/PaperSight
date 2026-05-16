@@ -10,3 +10,7 @@ artifacts/
 uploads/
 tests/fixtures/forms/
 .qodo/
+WRITEUP.md
+VIDEO_SCRIPT.md
+.DS_Store
+mock_form.png
